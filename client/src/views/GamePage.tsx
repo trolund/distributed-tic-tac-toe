@@ -130,13 +130,13 @@ export default function GamePage() {
                   {cell === 0 ? (
                     <FontAwesomeIcon
                       color="teal"
-                      className="h-24 w-24 text-xl"
+                      className="animate-fadeIn h-24 w-24 text-xl"
                       icon={faO}
                     />
                   ) : cell === 1 ? (
                     <FontAwesomeIcon
                       color="teal"
-                      className="h-24 w-24 text-xl"
+                      className="animate-fadeIn h-24 w-24 text-xl"
                       icon={faX}
                     />
                   ) : (
