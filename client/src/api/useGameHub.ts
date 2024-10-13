@@ -38,6 +38,7 @@ const useGameHub = (url: string) => {
     GameNotFound: (message: string) => {
       console.log(message);
       setMessage(message);
+      setGameState(null);
     },
     GameFull: (message: string) => {
       console.log(message);

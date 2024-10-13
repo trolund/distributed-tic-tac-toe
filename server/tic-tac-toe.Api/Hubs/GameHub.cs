@@ -108,9 +108,14 @@ public class GameHub: Hub
         return Clients.Caller.SendAsync("GameCreated", newGame);
     }
     
-    public async Task MakeMove(string gameName, int x, int y)
+    public async Task MakeMove(string gameId, int x, int y)
     {
-        var game = Games[gameName];
+        // Check if the game exists
+        if (!Games.TryGetValue(gameId, out var game))
+        {
+            await Clients.Caller.SendAsync("GameNotFound", "Game not found.");
+            return;
+        }
         
         // Check if the player is in the game
         if (game.Players.All(player => player.ConnectionId != Context.ConnectionId))
@@ -153,23 +158,23 @@ public class GameHub: Hub
             
             if (game.IsDraw)
             {
-                await Clients.Group(gameName).SendAsync("GameOver", "Game over. It's a draw.", game);
+                await Clients.Group(gameId).SendAsync("GameOver", "Game over. It's a draw.", game);
                 return;
             }
             
             switch (game.Winner)
             {
                 case 0:
-                    await Clients.Group(gameName).SendAsync("GameOver", $"Game over. {game.Players[0].Name} wins.", game);
+                    await Clients.Group(gameId).SendAsync("GameOver", $"Game over. {game.Players[0].Name} wins.", game);
                     return;
                 case 1:
-                    await Clients.Group(gameName).SendAsync("GameOver", $"Game over. {game.Players[1].Name} wins.", game);
+                    await Clients.Group(gameId).SendAsync("GameOver", $"Game over. {game.Players[1].Name} wins.", game);
                     return;
             }
         }
         
         // Send the move event to all players
-        await Clients.Group(gameName).SendAsync("MoveEvent", $"{Context.ConnectionId}: {gameName}, move: ({x}, {y})", game);
+        await Clients.Group(gameId).SendAsync("MoveEvent", $"{Context.ConnectionId}: {gameId}, move: ({x}, {y})", game);
     }
     
     private bool CheckGameOver(GameState game)

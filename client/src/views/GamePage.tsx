@@ -5,6 +5,7 @@ import CreateGameMenu from "../components/CreateGameMenu";
 import JoinGameMenu from "../components/JoinGameMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faO } from "@fortawesome/free-solid-svg-icons";
+import cn from "classnames";
 
 export default function GamePage() {
   const { message, gameState, joinGame, createGame, makeMove, leaveGame } =
@@ -20,9 +21,25 @@ export default function GamePage() {
     return gameState?.players[1] === null;
   }, [gameState]);
 
+  const isMyTurn = useCallback(() => {
+    var myId = isGameCreator ? 0 : 1;
+    return gameState?.currentPlayer === myId;
+  }, [gameState, isGameCreator]);
+
+  const haveGameEnded = useCallback(() => {
+    if (gameState == null) {
+      return true;
+    }
+
+    if (gameState.isDraw) {
+      return true;
+    }
+
+    return gameState?.isGameOver;
+  }, [gameState]);
+
   return (
     <>
-      {message.length > 0 && <span>{message}</span>}
       {!isGameStated() && isGameCreator == null && (
         <div className="ml-auto mr-auto flex max-w-96 flex-col justify-center gap-4">
           <button onClick={() => setIsGameCreator(true)}>Create</button>
@@ -74,7 +91,21 @@ export default function GamePage() {
               <h2>You lost!</h2>
             </div>
           )}
-          <div className="ml-auto mr-auto grid h-96 w-96 border-collapse grid-cols-3 gap-0 border-0">
+          {isMyTurn() && !haveGameEnded() ? (
+            <div>
+              <h2>It is your turn!</h2>
+            </div>
+          ) : (
+            <div>
+              <h2>It is your opponent's turn!</h2>
+            </div>
+          )}
+          <div
+            className={cn(
+              "ml-auto mr-auto grid h-96 w-96 border-collapse grid-cols-3 gap-0 border-0",
+              isMyTurn() ? "cursor-pointer" : "cursor-not-allowed",
+            )}
+          >
             {gameState?.board.map((row, x) =>
               row.map((cell, y) => (
                 <div
@@ -110,6 +141,7 @@ export default function GamePage() {
           <button onClick={leaveGame}>Leave game</button>
         </div>
       )}
+      {message.length > 0 && !haveGameEnded() && <span>{message}</span>}
     </>
   );
 }
