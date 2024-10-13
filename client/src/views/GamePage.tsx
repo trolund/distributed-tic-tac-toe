@@ -8,8 +8,15 @@ import { faX, faO } from "@fortawesome/free-solid-svg-icons";
 import cn from "classnames";
 
 export default function GamePage() {
-  const { message, gameState, joinGame, createGame, makeMove, leaveGame } =
-    useGameHub(BASE_URL_SIGNALR);
+  const {
+    message,
+    gameState,
+    joinGame,
+    createGame,
+    makeMove,
+    leaveGame,
+    reset,
+  } = useGameHub(BASE_URL_SIGNALR);
 
   const [isGameCreator, setIsGameCreator] = useState<boolean | null>(null);
 
@@ -81,7 +88,7 @@ export default function GamePage() {
               <h2>You won!</h2>
             </div>
           )}
-          {gameState?.winner === 2 && (
+          {gameState?.isDraw && (
             <div>
               <h2>It's a draw!</h2>
             </div>
@@ -91,15 +98,16 @@ export default function GamePage() {
               <h2>You lost!</h2>
             </div>
           )}
-          {isMyTurn() && !haveGameEnded() ? (
-            <div>
-              <h2>It is your turn!</h2>
-            </div>
-          ) : (
-            <div>
-              <h2>It is your opponent's turn!</h2>
-            </div>
-          )}
+          {!haveGameEnded() &&
+            (isMyTurn() ? (
+              <div>
+                <h2>It is your turn!</h2>
+              </div>
+            ) : (
+              <div>
+                <h2>It is your opponent's turn!</h2>
+              </div>
+            ))}
           <div
             className={cn(
               "ml-auto mr-auto grid h-96 w-96 border-collapse grid-cols-3 gap-0 border-0",
@@ -138,7 +146,14 @@ export default function GamePage() {
               )),
             )}
           </div>
-          <button onClick={leaveGame}>Leave game</button>
+          <button
+            onClick={() => {
+              leaveGame();
+              reset();
+            }}
+          >
+            Leave game
+          </button>
         </div>
       )}
       {message.length > 0 && !haveGameEnded() && <span>{message}</span>}

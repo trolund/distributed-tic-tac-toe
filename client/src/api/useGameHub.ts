@@ -8,6 +8,11 @@ const useGameHub = (url: string) => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [message, setMessage] = useState<string>("");
 
+  const reset = () => {
+    setGameState(null);
+    setMessage("");
+  };
+
   const eventHandlers = {
     PlayerJoined: (message: string, gameState: GameState) => {
       setGameState(gameState);
@@ -29,7 +34,7 @@ const useGameHub = (url: string) => {
     },
     GameEnded: (message: string) => {
       setMessage(message);
-      console.log("Game Ended", message);
+      console.log(message);
     },
     InvalidMove: (message: string) => {
       setMessage(message);
@@ -138,6 +143,7 @@ const useGameHub = (url: string) => {
     createGame,
     makeMove,
     leaveGame,
+    reset,
   };
 };
 

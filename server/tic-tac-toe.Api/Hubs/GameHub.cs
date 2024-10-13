@@ -25,6 +25,18 @@ public class GameHub: Hub
         
         // Remove the player from the game
         var player = game.Players.FirstOrDefault(player => player.ConnectionId == Context.ConnectionId);
+        if(player == null)
+        {
+            if (game.Players.All(x => x == null))
+            {
+                // remove the game if there are no players
+                Games.Remove(gameId);
+            }
+            
+            await Clients.Caller.SendAsync("PlayerNotInGame", "Player not in game.");
+            return;
+        }
+        
         game.Players[Array.IndexOf(game.Players, player)] = null;
         
         // Check if the game is over
