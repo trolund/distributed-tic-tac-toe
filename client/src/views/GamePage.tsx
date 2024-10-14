@@ -49,8 +49,12 @@ export default function GamePage() {
     <>
       {!isGameStated() && isGameCreator == null && (
         <div className="ml-auto mr-auto flex max-w-96 flex-col justify-center gap-4">
-          <button onClick={() => setIsGameCreator(true)}>Create</button>
-          <button onClick={() => setIsGameCreator(false)}>Join</button>
+          <button type="button" onClick={() => setIsGameCreator(true)}>
+            Create
+          </button>
+          <button type="button" onClick={() => setIsGameCreator(false)}>
+            Join
+          </button>
         </div>
       )}
       {!isGameStated() && isGameCreator == true && (
@@ -64,7 +68,9 @@ export default function GamePage() {
       {!isGameStated() && isGameCreator == false && (
         <div className="ml-auto mr-auto max-w-screen-lg">
           <div className="flex justify-start p-5">
-            <button onClick={() => setIsGameCreator(null)}>Back</button>
+            <button type="button" onClick={() => setIsGameCreator(null)}>
+              Back
+            </button>
           </div>
           <JoinGameMenu onSubmit={(d) => joinGame(d.gameId, d.playerName)} />
         </div>
@@ -88,14 +94,19 @@ export default function GamePage() {
               <h2>You won!</h2>
             </div>
           )}
-          {gameState?.isDraw && (
-            <div>
-              <h2>It's a draw!</h2>
-            </div>
-          )}
           {gameState?.winner === 0 && !isGameCreator && (
             <div>
               <h2>You lost!</h2>
+            </div>
+          )}
+          {gameState?.winner === 1 && isGameCreator && (
+            <div>
+              <h2>You lost!</h2>
+            </div>
+          )}
+          {gameState?.isDraw && (
+            <div>
+              <h2>It's a draw!</h2>
             </div>
           )}
           {!haveGameEnded() &&
@@ -130,13 +141,13 @@ export default function GamePage() {
                   {cell === 0 ? (
                     <FontAwesomeIcon
                       color="teal"
-                      className="animate-fadeIn h-24 w-24 text-xl"
+                      className="h-24 w-24 animate-fadeIn text-xl"
                       icon={faO}
                     />
                   ) : cell === 1 ? (
                     <FontAwesomeIcon
                       color="teal"
-                      className="animate-fadeIn h-24 w-24 text-xl"
+                      className="h-24 w-24 animate-fadeIn text-xl"
                       icon={faX}
                     />
                   ) : (
@@ -147,6 +158,7 @@ export default function GamePage() {
             )}
           </div>
           <button
+            type="button"
             onClick={() => {
               leaveGame();
               reset();
