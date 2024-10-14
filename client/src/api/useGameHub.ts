@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import useSignalR from "./useSignalR";
-import { GameState } from "../models/GameState";
 import { LogLevel } from "@microsoft/signalr";
 import { connectionHandler } from "../services/EventService";
+import { GameState } from "../models/gameState";
 
 const useGameHub = (url: string) => {
   const [gameState, setGameState] = useState<GameState | null>(null);
