@@ -1,4 +1,6 @@
-﻿using Manufacturing.Api.Hubs;
+﻿using Manufacturing.Api;
+using Manufacturing.Api.Hubs;
+using Manufacturing.Api.State;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
 builder.Services.AddLogging(logging => logging.AddConsole().AddDebug());
+builder.Services.AddSingleton<GameLogic>();
+builder.Services.AddSingleton<GameStateManager>();
 
 if (builder.Environment.IsDevelopment())
 {
